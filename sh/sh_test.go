@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	testMessage = "foo bar"
-	testErrorMessage = "Expected error"
+	testMessage      = "sample test message"
+	testErrorMessage = "sample error message"
 )
 
 func TestShellSuccess(t *testing.T) {
@@ -20,7 +20,7 @@ func TestShellSuccess(t *testing.T) {
 			t.Errorf("expected result message %s, got result : %v", testMessage, res)
 		}
 	})
-	
+
 	t.Run("TestShellMuteOutput", func(t *testing.T) {
 		res, err := ShellMuteOutput("echo %s", testMessage)
 		if err != nil {
@@ -59,7 +59,7 @@ func TestShellFail(t *testing.T) {
 			t.Errorf("expected error message 'exit status 1', got command error nil")
 		}
 	})
-	
+
 	t.Run("TestShellMuteOutput", func(t *testing.T) {
 		_, err := ShellMuteOutput("echo %s && exit 1", testErrorMessage)
 		if err == nil {
@@ -81,4 +81,3 @@ func TestShellFail(t *testing.T) {
 		}
 	})
 }
-

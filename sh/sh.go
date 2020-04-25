@@ -1,15 +1,14 @@
-
 package sh
 
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
 )
 
+var log = NewLogger()
 
 // Shell run command on shell and get back output and error if get one
 func Shell(format string, args ...interface{}) (string, error) {
@@ -54,19 +53,19 @@ func ShellBackgroundSilent(format string, args ...interface{}) (*os.Process, err
 func sh(ctx context.Context, format string, logCommand, logOutput, logError bool, args ...interface{}) (string, error) {
 	command := fmt.Sprintf(format, args...)
 	if logCommand {
-		log.Printf("Running command: \n%s", command) 
+		log.Infof("Running command: $ %s", command)
 	}
-	c := exec.CommandContext(ctx, "sh", "-c", command)  // #nosec
+	c := exec.CommandContext(ctx, "sh", "-c", command) // #nosec
 	bytes, err := c.CombinedOutput()
 	if logOutput {
 		if output := strings.TrimSuffix(string(bytes), "\n"); len(output) > 0 {
-			log.Printf("Command output: \n%s", output)
+			log.Infof("Command output: %s", output)
 		}
 	}
 
 	if err != nil {
 		if logError {
-			log.Printf("Command error: \n%s", err)
+			log.Errorf("Command error: %s", err)
 		}
 		return string(bytes), fmt.Errorf("command failed: %q %v", string(bytes), err)
 	}
@@ -76,14 +75,14 @@ func sh(ctx context.Context, format string, logCommand, logOutput, logError bool
 func shBackground(format string, logCommand, logError bool, args ...interface{}) (*os.Process, error) {
 	command := fmt.Sprintf(format, args...)
 	if logCommand {
-		log.Printf("Running command: \n%s", command) 
+		log.Infof("Running command: $ %s", command)
 	}
 	parts := strings.Split(command, " ")
 	c := exec.Command(parts[0], parts[1:]...) // #nosec
 	err := c.Start()
 	if err != nil {
 		if logError {
-			log.Printf("Command error: \n%s", err)
+			log.Errorf("Command error: %s", err)
 		}
 		return nil, err
 	}
