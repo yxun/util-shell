@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var log = NewLogger()
+var log = NewTextLogger()
 
 // Shell run command on shell and get back output and error if get one
 func Shell(format string, args ...interface{}) (string, error) {

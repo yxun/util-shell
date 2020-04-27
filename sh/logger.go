@@ -13,12 +13,20 @@ type StandardLogger struct {
 	*logrus.Logger
 }
 
-func NewLogger() *StandardLogger {
+func NewTextLogger() *StandardLogger {
 	var baseLogger = logrus.New()
 	var standardLogger = &StandardLogger{baseLogger}
 	standardLogger.Formatter = &logrus.TextFormatter{
 		FullTimestamp: true,
 	}
+
+	return standardLogger
+}
+
+func NewJSONLogger() *StandardLogger {
+	var baseLogger = logrus.New()
+	var standardLogger = &StandardLogger{baseLogger}
+	standardLogger.Formatter = &logrus.JSONFormatter{}
 
 	return standardLogger
 }
